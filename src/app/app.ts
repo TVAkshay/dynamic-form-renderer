@@ -45,9 +45,18 @@ export class App {
 
   onSchemaChange() {
     try {
-      const parsed = JSON.parse(this.schemaText);
+      const parsed: FormSchema = JSON.parse(this.schemaText);
+
+      if (Array.isArray(parsed.fields)) {
+        parsed.fields.forEach(field => {
+          if (!(field.type && field.label && field.name)) {
+            throw new Error('Each field must have "type", "label", and "name" properties');
+          }
+        })
+      }
 
       if (parsed && parsed.title && Array.isArray(parsed.fields)) {
+        this.submittedJson = {};
         this.schema = parsed;
         this.schemaError = '';
       } else {
