@@ -7,7 +7,7 @@
 1. **Clone the repository**
    ```bash
    git clone https://github.com/TVAkshay/dynamic-form-renderer.git
-   cd angular-assignment
+   cd dynamic-form-renderer
    ```
 
 2. **Install dependencies**
