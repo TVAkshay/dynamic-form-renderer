@@ -28,7 +28,8 @@ export class App {
         validation: {
           pattern: '^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$',
           message: 'Invalid email address'
-        }
+        },
+        dependsOn: 'fullName'
       },
       { label: 'Date of Birth', name: 'dob', type: 'date' },
       { label: 'Gender', name: 'gender', type: 'dropdown', options: ['Male', 'Female', 'Other'], required: true },

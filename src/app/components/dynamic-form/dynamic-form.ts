@@ -31,18 +31,32 @@ export class DynamicForm {
     }
   }
 
-  checkDependency(field: Field, control: FormControl) {
-    if (!field.dependsOn) { return; }
+  checkDependency(field: Field) {
+    if (!field.dependsOn) return;
+
     const dependentControl = this.form.get(field.dependsOn);
-    if (dependentControl) {
-      dependentControl.valueChanges.subscribe(() => {
-        if (dependentControl.value) {
-          control.enable();
-        } else {
-          control.disable();
-        }
-      });
+    const targetControl = this.form.get(field.name);
+
+    if (!dependentControl || !targetControl) return;
+
+    if (!dependentControl.value) {
+      targetControl.disable({ emitEvent: false });
     }
+
+    dependentControl.valueChanges.subscribe((value) => {
+      if (value) {
+        targetControl.enable({ emitEvent: false });
+      } else {
+        targetControl.setValue(this.getDefaultValueBasedOnType(field));
+        targetControl.disable({ emitEvent: false });
+      }
+    });
+  }
+
+  getDefaultValueBasedOnType(field: Field) {
+    if (field.type === 'checkbox') return false;
+    if (field.type === 'multiselect') return [];
+    return '';
   }
 
   makeForm() {
@@ -57,13 +71,16 @@ export class DynamicForm {
         if (this.initialValue && this.initialValue.hasOwnProperty(field.name)) {
           defaultValue = this.initialValue[field.name];
         }
-
         group[field.name] = new FormControl(
           { value: defaultValue, disabled: field.disabled || false },
           validators
         );
       })
       this.form = new FormGroup(group);
+
+      this.schema.fields.forEach(field => {
+        this.checkDependency(field);
+      });
     }
   }
 
