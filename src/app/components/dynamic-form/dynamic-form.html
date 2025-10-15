@@ -1,0 +1,53 @@
+@if (schema) {
+<div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+  <h2 class="text-2xl font-bold text-black pb-5">{{ schema.title || "" }}</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmitEvent()" class="space-y-6">
+    <div *ngFor="let field of schema.fields" class="form-row">
+      <label for="email" class="block text-sm/6 font-medium text-black-100">{{ field.label }}</label>
+      @switch (field.type) {
+        @case ('text') {
+          <input [formControlName]="field.name" [id]="field.name" type="text" [name]="field.name" [required]="field.required || false" [hidden]="field.hidden || false" [readonly]="field.readonly || false" [placeholder]="field.placeholder || `Enter ${ field.label }`" class="block w-full rounded-md px-3 py-1.5 border disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60 read-only:bg-gray-50" />
+        }
+        @case ('date') {
+          <input [formControlName]="field.name" [id]="field.name" [name]="field.name" [required]="field.required || false" [hidden]="field.hidden || false" [readonly]="field.readonly || false" type="date" [placeholder]="field.placeholder || `Enter ${ field.label }`" class="rounded-md px-3 py-1.5 text-base placeholder:text-black-500 sm:text-sm/6 border w-full " width="100%" placeholder="Enter {{ field.label }}" />
+        }
+        @case ('dropdown') {
+          <select [formControlName]="field.name" [id]="field.name" [name]="field.name" [required]="field.required || false" [hidden]="field.hidden || false" class="rounded-md px-3 py-1.5 text-base placeholder:text-black-500 sm:text-sm/6 border w-full disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60">
+            <option value="">Select an option</option>
+            @for (option of field.options; track option) {
+              <option value="{{ option }}">{{ option }}</option>
+            }
+          </select>
+        }
+        @case ('multiselect') {
+          <select [formControlName]="field.name" [id]="field.name" [name]="field.name" [required]="field.required || false" [hidden]="field.hidden || false" class="rounded-md px-3 py-1.5 text-base placeholder:text-black-500 sm:text-sm/6 border w-full disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60" multiple>
+            @for (option of field.options; track option) {
+              <option value="{{ option }}">{{ option }}</option>
+            }
+          </select>
+        }
+        @case ('checkbox') {
+          <input [formControlName]="field.name" [id]="field.name" [name]="field.name" [required]="field.required || false" [hidden]="field.hidden || false" type="checkbox" class="rounded-md px-3 py-1.5 text-base placeholder:text-black-500 sm:text-sm/6 border disabled:cursor-not-allowed disabled:opacity-60" width="100%" />
+        }
+        @case ('number') {
+          <input [formControlName]="field.name" [id]="field.name" [name]="field.name" [required]="field.required || false" [hidden]="field.hidden || false" [readonly]="field.readonly || false" [placeholder]="field.placeholder || `Enter ${ field.label }`" type="number" class="rounded-md px-3 py-1.5 text-base placeholder:text-black-500 sm:text-sm/6 border w-full disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60 read-only:bg-gray-50" width="100%" placeholder="Enter {{ field.label }}" />
+        }
+        @case ('password') {
+          <input [formControlName]="field.name" [id]="field.name" [name]="field.name" [required]="field.required || false" [hidden]="field.hidden || false" [readonly]="field.readonly || false" [placeholder]="field.placeholder || `Enter ${ field.label }`" type="password" class="rounded-md px-3 py-1.5 text-base placeholder:text-black-500 sm:text-sm/6 border w-full disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60 read-only:bg-gray-50" width="100%" placeholder="Enter {{ field.label }}" />
+        }
+        @case ('textarea') {
+          <textarea [formControlName]="field.name" [id]="field.name" [name]="field.name" [required]="field.required || false" [hidden]="field.hidden || false" [readonly]="field.readonly || false" [placeholder]="field.placeholder || `Enter ${ field.label }`" class="rounded-md px-3 py-1.5 text-base placeholder:text-black-500 sm:text-sm/6 border w-full disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60 read-only:bg-gray-50" width="100%" placeholder="Enter {{ field.label }}"></textarea>
+        }
+      }
+      @if (getErrorMessage(field)) {
+        <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ getErrorMessage(field) }}</p>
+      }
+    </div>
+    @if(schema.fields && schema.fields.length) {
+      <div>
+        <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Submit</button>
+      </div>
+    }
+  </form>
+ </div>
+}

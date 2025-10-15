@@ -1,59 +1,187 @@
-# AngularAssignment
+# Angular Dynamic Form Builder
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.5.
+## 🚀 Getting Started
 
-## Development server
+### Installation
 
-To start a local development server, run:
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd angular-assignment
+   ```
 
-```bash
-ng serve
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server**
+   ```bash
+   npm start
+   # or
+   ng serve
+   ```
+
+4. **Open your browser**
+   Navigate to `http://localhost:4200/`
+
+## 📖 Usage
+
+### Basic Schema Example
+
+```json
+{
+  "title": "User Registration",
+  "fields": [
+    {
+      "label": "Full Name",
+      "name": "fullName",
+      "type": "text",
+      "required": true
+    },
+    {
+      "label": "Email",
+      "name": "email",
+      "type": "text",
+      "required": true,
+      "validation": {
+        "pattern": "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$",
+        "message": "Invalid email address"
+      }
+    },
+    {
+      "label": "Age",
+      "name": "age",
+      "type": "number",
+      "validation": {
+        "min": 18,
+        "max": 100
+      }
+    }
+  ]
+}
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+You will see this Screen with given schema.
 
-## Code scaffolding
+![screenshot](public/FirstSchemaOutput.png)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
 
-```bash
-ng generate component component-name
+
+### Advanced Schema with Validation
+
+```json
+{
+  "title": "Contact Form",
+  "fields": [
+    {
+      "label": "Username",
+      "name": "username",
+      "type": "text",
+      "required": true,
+      "validation": {
+        "minLength": 3,
+        "maxLength": 20,
+        "message": "Username must be between 3 and 20 characters"
+      }
+    },
+    {
+      "label": "Country",
+      "name": "country",
+      "type": "dropdown",
+      "options": ["USA", "UK", "Canada", "Australia"],
+      "required": true
+    },
+    {
+      "label": "Interests",
+      "name": "interests",
+      "type": "multiselect",
+      "options": ["Sports", "Music", "Reading", "Travel"]
+    },
+    {
+      "label": "Comments",
+      "name": "comments",
+      "type": "textarea",
+      "placeholder": "Enter your comments here"
+    }
+  ]
+}
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🏗️ Project Structure
 
-```bash
-ng generate --help
+```
+src/
+├── app/
+│   ├── components/
+│   │   └── dynamic-form/
+│   │       ├── dynamic-form.ts          # Form component logic
+│   │       ├── dynamic-form.html        # Form template
+│   │       ├── dynamic-form.css         # Form styles
+│   │       └── dynamic-form.spec.ts     # Unit tests
+│   ├── models/
+│   │   └── form-schemas.ts              # TypeScript interfaces
+│   ├── app.ts                           # Main app component
+│   ├── app.html                         # Main app template
+│   └── app.css                          # Main app styles
+├── styles.css                           # Global styles
+└── index.html                           # Entry HTML
 ```
 
-## Building
+## 🧪 Testing
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Run unit tests with:
 
 ```bash
+npm test
+# or
 ng test
+
+
+```
+You will see this Screen after running Tests 
+
+![screenshot](public/TestResults.png)
+## 🔧 Component Usage
+
+### In Your Component
+
+```typescript
+import { DynamicForm } from './components/dynamic-form/dynamic-form';
+import { FormSchema } from './models/form-schemas';
+
+@Component({
+  selector: 'app-example',
+  imports: [DynamicForm],
+  template: `
+    <app-dynamic-form
+      [schema]="formSchema"
+      [initialValue]="initialData"
+      (onSubmit)="handleSubmit($event)"
+    ></app-dynamic-form>
+  `
+})
+export class ExampleComponent {
+  formSchema: FormSchema = {
+    title: 'My Form',
+    fields: [
+      { label: 'Name', name: 'name', type: 'text', required: true }
+    ]
+  };
+
+  initialData = { name: 'John Doe' };
+
+  handleSubmit(formData: any) {
+    console.log('Form submitted:', formData);
+  }
+}
 ```
 
-## Running end-to-end tests
+## 🛠️ Technologies Used
 
-For end-to-end (e2e) testing, run:
+- **Angular 20.3** - Frontend framework
+- **TypeScript 5.9** - Programming language
+- **Tailwind CSS 4.1** - Utility-first CSS framework
+- **RxJS 7.8** - Reactive programming library
+- **Karma & Jasmine** - Testing framework
 
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
